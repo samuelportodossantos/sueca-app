@@ -1,59 +1,84 @@
 <template>
   <div class="home">
 
-    <div class="game-board">
-      <div class="player-card-board">
-        <card
-          :spritePath="cards[0].imagePath"
-        />
-        <card
-          :spritePath="cards[0].imagePath"
-        />
-        <card
-          :spritePath="cards[0].imagePath"
-        />
-        <card
-          :spritePath="cards[0].imagePath"
-        />
+    <div class="board-cards">
+
+    </div>
+
+    <div class="selected-card">
+      <div @click="resetCard()">
+        <card  v-show="selectedCard.path !== ''" :path="selectedCard.path" />
       </div>
     </div>
-    
 
-
+    <div class="game-board">
+      <div class="hand-card-board">
+        <div v-for="(card, key) in hand" :key="key" @click="selectCard(card)">
+          <card :path="card.path" />
+        </div>
+      </div>
+      <hr />
+      <button @click="generateHand()">Randomizar cartas</button>
+    </div>
 
   </div>
 </template>
 
 <script>
-import Card from '../components/Card.vue';
-import cards from '../helpers/cards.js'
-
-console.log(cards);
+import Card from "../components/Card.vue";
+import cardsService from "../helpers/cards.js";
 
 export default {
-  name: 'Home',
+  name: "Home",
   components: {
-    Card
+    Card,
   },
   data: () => {
     return {
-      cards: cards
+      hand: [],
+      selectedCard: {
+        label: "",
+        path: "",
+        value: "  ",
+      },
+    };
+  },
+  mounted() {
+    this.generateHand();
+  },
+  computed: {
+    cards() {
+      return cardsService.getAll();
+    },
+  },
+  methods: {
+    generateHand() {
+      this.hand = cardsService.getRandomCards(this.cards, 9);
+    },
+    selectCard(card) {
+      this.selectedCard = card;
+    },
+    resetCard() {
+      this.selectedCard = {
+        label: "",
+        path: "",
+        value: "  ",
+      }
     }
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
-  .gamee-board {
-    display: flex;
+.game-board {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
 
-  }
-
-  .player-card-board {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    background: rebeccapurple;
-  }
-
+.hand-card-board {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
 </style>

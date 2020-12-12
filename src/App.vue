@@ -11,8 +11,7 @@
 <style>
 
   body {
-    background: url('/bg/poker.jpg') center center no-repeat;
-    background-size: cover;
+    background-color: #07582F;
   }
 
 </style>
